@@ -1,9 +1,10 @@
 import { AxiError } from "axi-sdk-js";
-import { parseFlags } from "../args.js";
+import { assertKnownFlags, parseFlags } from "../args.js";
 import { collapseWhitespace, isoDate, truncateWithCount } from "../format.js";
 import { fetchPackument, fetchVersion, type PypiFile, type PypiInfo } from "../pypi.js";
 
 const SUMMARY_LIMIT = 800;
+const USAGE = "pypi-axi view <pkg> [--version X] [--full]";
 
 function authorString(info: PypiInfo): string | undefined {
   if (info.author && info.author.trim()) return info.author.trim();
@@ -34,11 +35,10 @@ function latestUploadDate(files: PypiFile[]): string | undefined {
 
 export async function viewCommand(args: string[]): Promise<Record<string, unknown>> {
   const { positionals, flags } = parseFlags(args, ["full"]);
+  assertKnownFlags(flags, ["full", "version"], USAGE);
   const pkg = positionals[0];
   if (!pkg) {
-    throw new AxiError("a package name is required", "VALIDATION_ERROR", [
-      "pypi-axi view <pkg> [--version X] [--full]",
-    ]);
+    throw new AxiError("a package name is required", "VALIDATION_ERROR", [USAGE]);
   }
 
   const version = typeof flags.version === "string" ? flags.version : undefined;

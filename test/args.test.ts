@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseFlags, parseLimit } from "../src/args.js";
+import { assertKnownFlags, parseFlags, parseLimit } from "../src/args.js";
 
 describe("parseFlags", () => {
   it("collects positionals and --key value flags", () => {
@@ -28,6 +28,27 @@ describe("parseFlags", () => {
     const { positionals, flags } = parseFlags(["--full", "requests"], ["full"]);
     expect(flags.full).toBe(true);
     expect(positionals).toEqual(["requests"]);
+  });
+});
+
+describe("assertKnownFlags", () => {
+  it("passes when all flags are allowed", () => {
+    expect(() => assertKnownFlags({ version: "1.0", full: true }, ["version", "full"], "usage")).not.toThrow();
+  });
+
+  it("throws VALIDATION_ERROR listing valid flags on an unrecognized flag", () => {
+    expect(() => assertKnownFlags({ bogus: true }, ["version", "full"], "usage")).toThrowError(
+      expect.objectContaining({
+        code: "VALIDATION_ERROR",
+        suggestions: expect.arrayContaining(["valid flags: --version, --full"]),
+      }),
+    );
+  });
+
+  it("reports \"(none)\" when the command takes no flags", () => {
+    expect(() => assertKnownFlags({ bogus: true }, [], "usage")).toThrowError(
+      expect.objectContaining({ suggestions: expect.arrayContaining(["valid flags: (none)"]) }),
+    );
   });
 });
 

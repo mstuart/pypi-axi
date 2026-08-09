@@ -1,3 +1,5 @@
+import { AxiError } from "axi-sdk-js";
+
 export interface ParsedArgs {
   positionals: string[];
   flags: Record<string, string | boolean>;
@@ -37,6 +39,25 @@ export function parseFlags(args: string[], booleans: string[] = []): ParsedArgs 
   }
 
   return { positionals, flags };
+}
+
+/**
+ * Reject any flag not in `allowed`. Called before any dependency call so an
+ * unrecognized flag fails loud (VALIDATION_ERROR) instead of being silently
+ * dropped and misread as scoped/filtered output.
+ */
+export function assertKnownFlags(
+  flags: Record<string, string | boolean>,
+  allowed: string[],
+  commandUsage: string,
+): void {
+  const unknown = Object.keys(flags).find((name) => !allowed.includes(name));
+  if (unknown) {
+    throw new AxiError(`unknown flag --${unknown}`, "VALIDATION_ERROR", [
+      `valid flags: ${allowed.map((f) => `--${f}`).join(", ") || "(none)"}`,
+      commandUsage,
+    ]);
+  }
 }
 
 /** Parse a `--limit` flag into a clamped positive integer. */
