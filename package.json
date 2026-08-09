@@ -15,11 +15,11 @@
   "author": "Mark Stuart",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mstuart/pypi-axi.git"
+    "url": "git+https://github.com/mstuart/pypi-axi.git"
   },
   "type": "module",
   "bin": {
-    "pypi-axi": "./dist/bin/pypi-axi.js"
+    "pypi-axi": "dist/bin/pypi-axi.js"
   },
   "files": [
     "dist",
