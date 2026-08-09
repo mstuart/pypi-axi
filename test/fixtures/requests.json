@@ -1,0 +1,657 @@
+{
+  "info": {
+    "author": null,
+    "author_email": "Kenneth Reitz <me@kennethreitz.org>",
+    "bugtrack_url": null,
+    "classifiers": [
+      "Development Status :: 5 - Production/Stable",
+      "Environment :: Web Environment",
+      "Intended Audience :: Developers",
+      "License :: OSI Approved :: Apache Software License",
+      "Natural Language :: English",
+      "Operating System :: OS Independent",
+      "Programming Language :: Python",
+      "Programming Language :: Python :: 3",
+      "Programming Language :: Python :: 3 :: Only",
+      "Programming Language :: Python :: 3.10",
+      "Programming Language :: Python :: 3.11",
+      "Programming Language :: Python :: 3.12",
+      "Programming Language :: Python :: 3.13",
+      "Programming Language :: Python :: 3.14",
+      "Programming Language :: Python :: 3.15",
+      "Programming Language :: Python :: Free Threading :: 2 - Beta",
+      "Programming Language :: Python :: Implementation :: CPython",
+      "Programming Language :: Python :: Implementation :: PyPy",
+      "Topic :: Internet :: WWW/HTTP",
+      "Topic :: Software Development :: Libraries"
+    ],
+    "description": "# Requests\n\n[![Version](https://img.shields.io/pypi/v/requests.svg?maxAge=86400)](https://pypi.org/project/requests/)\n[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)\n[![Downloads](https://static.pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)\n[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)\n[![Documentation](https://readthedocs.org/projects/requests/badge/?version=latest)](https://requests.readthedocs.io)\n\n**Requests** is a simple, yet elegant, HTTP library.\n\n```python\n>>> import requests\n>>> r = requests.get('https://httpbin.org/basic-auth/user/pass', auth=('user', 'pass'))\n>>> r.status_code\n200\n>>> r.headers['content-type']\n'application/json; charset=utf8'\n>>> r.encoding\n'utf-8'\n>>> r.text\n'{\"authenticated\": true, ...'\n>>> r.json()\n{'authenticated': True, ...}\n```\n\nRequests allows you to send HTTP/1.1 requests extremely easily. There\u2019s no need to manually add query strings to your URLs, or to form-encode your `PUT` & `POST` data \u2014 but nowadays, just use the `json` method!\n\nRequests is one of the most downloaded Python packages today, pulling in around `300M downloads / week` \u2014 according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `4,000,000+` repositories.\n\n## Installing Requests and Supported Versions\n\nRequests is available on PyPI:\n\n```console\n$ python -m pip install requests\n```\n\nRequests officially supports Python 3.10+.\n\n## Supported Features & Best\u2013Practices\n\nRequests is ready for the demands of building robust and reliable HTTP\u2013speaking applications, for the needs of today.\n\n- Keep-Alive & Connection Pooling\n- International Domains and URLs\n- Sessions with Cookie Persistence\n- Browser-style TLS/SSL Verification\n- Basic & Digest Authentication\n- Familiar `dict`\u2013like Cookies\n- Automatic Content Decompression and Decoding\n- Multi-part File Uploads\n- SOCKS Proxy Support\n- Connection Timeouts\n- Streaming Downloads\n- Automatic honoring of `.netrc`\n- Chunked HTTP Requests\n\n## Cloning the repository\n\nWhen cloning the Requests repository, you may need to add the `-c\nfetch.fsck.badTimezone=ignore` flag to avoid an error about a bad commit timestamp (see\n[this issue](https://github.com/psf/requests/issues/2690) for more background):\n\n```shell\ngit clone -c fetch.fsck.badTimezone=ignore https://github.com/psf/requests.git\n```\n\nYou can also apply this setting to your global Git config:\n\n```shell\ngit config --global fetch.fsck.badTimezone ignore\n```\n\n---\n\n[![Kenneth Reitz](https://raw.githubusercontent.com/psf/requests/main/ext/kr.png)](https://kennethreitz.org) [![Python Software Foundation](https://raw.githubusercontent.com/psf/requests/main/ext/psf.png)](https://www.python.org/psf)\n",
+    "description_content_type": "text/markdown",
+    "docs_url": null,
+    "download_url": null,
+    "downloads": {
+      "last_day": -1,
+      "last_month": -1,
+      "last_week": -1
+    },
+    "dynamic": [
+      "License-File"
+    ],
+    "home_page": null,
+    "keywords": null,
+    "license": "Apache-2.0",
+    "license_expression": null,
+    "license_files": [
+      "LICENSE",
+      "NOTICE"
+    ],
+    "maintainer": null,
+    "maintainer_email": "Ian Stapleton Cordasco <graffatcolmingov@gmail.com>, Nate Prewitt <nate.prewitt@gmail.com>",
+    "name": "requests",
+    "package_url": "https://pypi.org/project/requests/",
+    "platform": null,
+    "project_url": "https://pypi.org/project/requests/",
+    "project_urls": {
+      "Documentation": "https://requests.readthedocs.io",
+      "Source": "https://github.com/psf/requests"
+    },
+    "provides_extra": [
+      "security",
+      "socks",
+      "use-chardet-on-py3"
+    ],
+    "release_url": "https://pypi.org/project/requests/2.34.2/",
+    "requires_dist": [
+      "charset_normalizer<4,>=2",
+      "idna<4,>=2.5",
+      "urllib3<3,>=1.26",
+      "certifi>=2023.5.7",
+      "PySocks!=1.5.7,>=1.5.6; extra == \"socks\"",
+      "chardet<8,>=3.0.2; extra == \"use-chardet-on-py3\""
+    ],
+    "requires_python": ">=3.10",
+    "summary": "Python HTTP for Humans.",
+    "version": "2.34.2",
+    "yanked": false,
+    "yanked_reason": null
+  },
+  "releases": {
+    "0.0.1": [],
+    "0.10.0": [
+      {
+        "comment_text": "",
+        "core-metadata": false,
+        "digests": {
+          "blake2b_256": "62350230421b8c4efad6624518028163329ad0c2df9e58e6b3bee013427bf8f6",
+          "md5": "c90a48af18eb4170dbe4832c1104440c",
+          "sha256": "210a82e678c45d433a4ad1f105974b3102a8ab5198872dc0a3238a8750d4c65e"
+        },
+        "downloads": -1,
+        "filename": "requests-0.10.0.tar.gz",
+        "has_sig": false,
+        "md5_digest": "c90a48af18eb4170dbe4832c1104440c",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "requires_python": null,
+        "size": 62046,
+        "upload_time": "2012-01-22T05:08:17",
+        "upload_time_iso_8601": "2012-01-22T05:08:17.091441Z",
+        "url": "https://files.pythonhosted.org/packages/62/35/0230421b8c4efad6624518028163329ad0c2df9e58e6b3bee013427bf8f6/requests-0.10.0.tar.gz",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    ],
+    "0.10.1": [
+      {
+        "comment_text": "",
+        "core-metadata": false,
+        "digests": {
+          "blake2b_256": "b456ba2d803383ec32d70f8faa7df5eb37ee9b3fc662ff68b7ab01ad9740b83a",
+          "md5": "699147d2143bff95238befa58980b912",
+          "sha256": "da6031575a30c7b65ea99465183468349b3645e6bf5322e49d53f565b27ed2b5"
+        },
+        "downloads": -1,
+        "filename": "requests-0.10.1.tar.gz",
+        "has_sig": false,
+        "md5_digest": "699147d2143bff95238befa58980b912",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "requires_python": null,
+        "size": 63234,
+        "upload_time": "2012-01-23T08:22:52",
+        "upload_time_iso_8601": "2012-01-23T08:22:52.352375Z",
+        "url": "https://files.pythonhosted.org/packages/b4/56/ba2d803383ec32d70f8faa7df5eb37ee9b3fc662ff68b7ab01ad9740b83a/requests-0.10.1.tar.gz",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    ],
+    "2.1.0": [
+      {
+        "comment_text": "",
+        "core-metadata": {
+          "sha256": "443a94dbec0d902cf77c6d906ec4608a30b5aa56a4409754f454071d61e928d6"
+        },
+        "digests": {
+          "blake2b_256": "1e97f0a8e5e71c75a2abf5ec91438b84ec1a40a5e1b5f985c06721a3ebe57c0a",
+          "md5": "0848cbc0cc7edd150cb8d6ddc25ca906",
+          "sha256": "fcef306d62b1c061eb00b8402cf136ff0ea1daf7a53b60cdef9563a22850072c"
+        },
+        "downloads": -1,
+        "filename": "requests-2.1.0-py2.py3-none-any.whl",
+        "has_sig": false,
+        "md5_digest": "0848cbc0cc7edd150cb8d6ddc25ca906",
+        "packagetype": "bdist_wheel",
+        "python_version": "2.7",
+        "requires_python": null,
+        "size": 445280,
+        "upload_time": "2013-12-05T22:51:41",
+        "upload_time_iso_8601": "2013-12-05T22:51:41.312732Z",
+        "url": "https://files.pythonhosted.org/packages/1e/97/f0a8e5e71c75a2abf5ec91438b84ec1a40a5e1b5f985c06721a3ebe57c0a/requests-2.1.0-py2.py3-none-any.whl",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "comment_text": "",
+        "core-metadata": false,
+        "digests": {
+          "blake2b_256": "515d3729c242ed7693f29941fd9d40e936d4994b0aa704dfd0c023312fcce8a3",
+          "md5": "28543001831f46b1ff40686ebc027deb",
+          "sha256": "a57307f3a5f35ec9e1254aaf3e0484063ee3ee6b5f123fb35c5b2673492efa71"
+        },
+        "downloads": -1,
+        "filename": "requests-2.1.0.tar.gz",
+        "has_sig": false,
+        "md5_digest": "28543001831f46b1ff40686ebc027deb",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "requires_python": null,
+        "size": 420289,
+        "upload_time": "2013-12-05T22:51:38",
+        "upload_time_iso_8601": "2013-12-05T22:51:38.634004Z",
+        "url": "https://files.pythonhosted.org/packages/51/5d/3729c242ed7693f29941fd9d40e936d4994b0aa704dfd0c023312fcce8a3/requests-2.1.0.tar.gz",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    ],
+    "2.10.0": [
+      {
+        "comment_text": "",
+        "core-metadata": {
+          "sha256": "e16fe862cc5979369849ef3dad52fe4bcd6659fb4fca4faac80e65e35ecbb373"
+        },
+        "digests": {
+          "blake2b_256": "99b463d99ba8e189c47d906b43bae18af4396e336f2b1bfec86af31efe2d2cb8",
+          "md5": "abf5a77de3e8a5973c738cca884502a0",
+          "sha256": "09bc1b5f3a56cd8c48d433213a8cba51a67d12936568f73b5f1793fcb0c0979e"
+        },
+        "downloads": -1,
+        "filename": "requests-2.10.0-py2.py3-none-any.whl",
+        "has_sig": false,
+        "md5_digest": "abf5a77de3e8a5973c738cca884502a0",
+        "packagetype": "bdist_wheel",
+        "python_version": "2.7",
+        "requires_python": null,
+        "size": 506877,
+        "upload_time": "2016-04-29T22:12:39",
+        "upload_time_iso_8601": "2016-04-29T22:12:39.027730Z",
+        "url": "https://files.pythonhosted.org/packages/99/b4/63d99ba8e189c47d906b43bae18af4396e336f2b1bfec86af31efe2d2cb8/requests-2.10.0-py2.py3-none-any.whl",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "comment_text": "",
+        "core-metadata": false,
+        "digests": {
+          "blake2b_256": "496f183063f01aae1e025cf0130772b55848750a2f3a89bfa11b385b35d7329d",
+          "md5": "a36f7a64600f1bfec4d55ae021d232ae",
+          "sha256": "63f1815788157130cee16a933b2ee184038e975f0017306d723ac326b5525b54"
+        },
+        "downloads": -1,
+        "filename": "requests-2.10.0.tar.gz",
+        "has_sig": false,
+        "md5_digest": "a36f7a64600f1bfec4d55ae021d232ae",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "requires_python": null,
+        "size": 477617,
+        "upload_time": "2016-04-29T22:12:32",
+        "upload_time_iso_8601": "2016-04-29T22:12:32.122862Z",
+        "url": "https://files.pythonhosted.org/packages/49/6f/183063f01aae1e025cf0130772b55848750a2f3a89bfa11b385b35d7329d/requests-2.10.0.tar.gz",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    ],
+    "2.6.1": [
+      {
+        "comment_text": "",
+        "core-metadata": {
+          "sha256": "20a45d394c61b91073fae9a5a92b6eee865b796e04fca1d22fb89b0656fac266"
+        },
+        "digests": {
+          "blake2b_256": "64745bedd762987b5cb4ad5de4901d12942ad7635bffa5ae4f6b5e725d1b2068",
+          "md5": "adb8e91b3367bc0417ef1e4a6dced9b1",
+          "sha256": "79515d60eae4f5d426b8813ffd60ed874169d78b8815844e8e85798ef27a599f"
+        },
+        "downloads": -1,
+        "filename": "requests-2.6.1-py2.py3-none-any.whl",
+        "has_sig": false,
+        "md5_digest": "adb8e91b3367bc0417ef1e4a6dced9b1",
+        "packagetype": "bdist_wheel",
+        "python_version": "py2.py3",
+        "requires_python": null,
+        "size": 469962,
+        "upload_time": "2015-04-23T02:27:04",
+        "upload_time_iso_8601": "2015-04-23T02:27:04.893535Z",
+        "url": "https://files.pythonhosted.org/packages/64/74/5bedd762987b5cb4ad5de4901d12942ad7635bffa5ae4f6b5e725d1b2068/requests-2.6.1-py2.py3-none-any.whl",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "comment_text": "",
+        "core-metadata": false,
+        "digests": {
+          "blake2b_256": "08d53dfb95813d697d1e5a3eccb9b88f9d91a233fc35b0ddbb5bc238142f9de0",
+          "md5": "da6e487f89e6a531699b7fd97ff182af",
+          "sha256": "490b111c824d64b84797a899a4c22618bbc45323ac24a0a0bb4b73a8758e943c"
+        },
+        "downloads": -1,
+        "filename": "requests-2.6.1.tar.gz",
+        "has_sig": false,
+        "md5_digest": "da6e487f89e6a531699b7fd97ff182af",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "requires_python": null,
+        "size": 450975,
+        "upload_time": "2015-04-23T02:27:12",
+        "upload_time_iso_8601": "2015-04-23T02:27:12.848707Z",
+        "url": "https://files.pythonhosted.org/packages/08/d5/3dfb95813d697d1e5a3eccb9b88f9d91a233fc35b0ddbb5bc238142f9de0/requests-2.6.1.tar.gz",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    ],
+    "2.6.2": [
+      {
+        "comment_text": "",
+        "core-metadata": {
+          "sha256": "0fe509e7975a77dd69d704d460291948b6c42db3664032e7f1629f809e485bc3"
+        },
+        "digests": {
+          "blake2b_256": "9f3ec09023432b822a09d965878640de63f8126d77c948f45c24dcad13d42721",
+          "md5": "36746c275589b2154307bbcc6d28320a",
+          "sha256": "8f0f56813f82d0c27d9578221268ac9af48f076c71ee69693305ceca6ca355bd"
+        },
+        "downloads": -1,
+        "filename": "requests-2.6.2-py2.py3-none-any.whl",
+        "has_sig": false,
+        "md5_digest": "36746c275589b2154307bbcc6d28320a",
+        "packagetype": "bdist_wheel",
+        "python_version": "py2.py3",
+        "requires_python": null,
+        "size": 470140,
+        "upload_time": "2015-04-23T16:30:52",
+        "upload_time_iso_8601": "2015-04-23T16:30:52.318157Z",
+        "url": "https://files.pythonhosted.org/packages/9f/3e/c09023432b822a09d965878640de63f8126d77c948f45c24dcad13d42721/requests-2.6.2-py2.py3-none-any.whl",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "comment_text": "",
+        "core-metadata": false,
+        "digests": {
+          "blake2b_256": "37b3d1a5d9768240a1104a620730a1226975ceb9dd3882a8cfd8935b314ee0ca",
+          "md5": "0d703e5be558566e0f8c37f960d95372",
+          "sha256": "0577249d4b6c4b11fd97c28037e98664bfaa0559022fee7bcef6b752a106e505"
+        },
+        "downloads": -1,
+        "filename": "requests-2.6.2.tar.gz",
+        "has_sig": false,
+        "md5_digest": "0d703e5be558566e0f8c37f960d95372",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "requires_python": null,
+        "size": 451109,
+        "upload_time": "2015-04-23T16:31:01",
+        "upload_time_iso_8601": "2015-04-23T16:31:01.589754Z",
+        "url": "https://files.pythonhosted.org/packages/37/b3/d1a5d9768240a1104a620730a1226975ceb9dd3882a8cfd8935b314ee0ca/requests-2.6.2.tar.gz",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    ],
+    "2.7.0": [
+      {
+        "comment_text": "",
+        "core-metadata": {
+          "sha256": "bc53eae659a5916d2624c0a9fcb6c7646c7c57632005ee80b024815e17d73959"
+        },
+        "digests": {
+          "blake2b_256": "26ffc71b3943bebdd9f7ceb9e137296370587eb0b33fe2eb3732ae168bc45204",
+          "md5": "564fb256f865a79f977e57b79d31659a",
+          "sha256": "20f976cdce02a42b69ce80e9e03897a51814b36d448b37288546086ebc473146"
+        },
+        "downloads": -1,
+        "filename": "requests-2.7.0-py2.py3-none-any.whl",
+        "has_sig": false,
+        "md5_digest": "564fb256f865a79f977e57b79d31659a",
+        "packagetype": "bdist_wheel",
+        "python_version": "2.7",
+        "requires_python": null,
+        "size": 470641,
+        "upload_time": "2015-05-03T15:01:28",
+        "upload_time_iso_8601": "2015-05-03T15:01:28.821871Z",
+        "url": "https://files.pythonhosted.org/packages/26/ff/c71b3943bebdd9f7ceb9e137296370587eb0b33fe2eb3732ae168bc45204/requests-2.7.0-py2.py3-none-any.whl",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "comment_text": "",
+        "core-metadata": false,
+        "digests": {
+          "blake2b_256": "0a008cc925deac3a87046a4148d7846b571cf433515872b5430de4cd9dea83cb",
+          "md5": "29b173fd5fa572ec0764d1fd7b527260",
+          "sha256": "398a3db6d61899d25fd4a06c6ca12051b0ce171d705decd7ed5511517b4bb93d"
+        },
+        "downloads": -1,
+        "filename": "requests-2.7.0.tar.gz",
+        "has_sig": false,
+        "md5_digest": "29b173fd5fa572ec0764d1fd7b527260",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "requires_python": null,
+        "size": 451723,
+        "upload_time": "2015-05-03T15:01:21",
+        "upload_time_iso_8601": "2015-05-03T15:01:21.105760Z",
+        "url": "https://files.pythonhosted.org/packages/0a/00/8cc925deac3a87046a4148d7846b571cf433515872b5430de4cd9dea83cb/requests-2.7.0.tar.gz",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    ],
+    "2.8.0": [
+      {
+        "comment_text": "",
+        "core-metadata": {
+          "sha256": "9c51b88bd93c538f8445d507dea15769a23bdb54faa2e4405521d71d3153d3cf"
+        },
+        "digests": {
+          "blake2b_256": "5da690f822c17b4fc905da67aed49b511f110207242ff164aeda926461101dc6",
+          "md5": "52236eb6f886db4d2afba43775c97050",
+          "sha256": "3a34af0dd06fed021286d93da464bbb76dcc0c709d02e7d3cdca195b1341c380"
+        },
+        "downloads": -1,
+        "filename": "requests-2.8.0-py2.py3-none-any.whl",
+        "has_sig": false,
+        "md5_digest": "52236eb6f886db4d2afba43775c97050",
+        "packagetype": "bdist_wheel",
+        "python_version": "py2.py3",
+        "requires_python": null,
+        "size": 476582,
+        "upload_time": "2015-10-06T14:47:57",
+        "upload_time_iso_8601": "2015-10-06T14:47:57.677398Z",
+        "url": "https://files.pythonhosted.org/packages/5d/a6/90f822c17b4fc905da67aed49b511f110207242ff164aeda926461101dc6/requests-2.8.0-py2.py3-none-any.whl",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "comment_text": "",
+        "core-metadata": false,
+        "digests": {
+          "blake2b_256": "1b920632a7eb5e94bfedd300a3a5f4ebbf8505fd9768ba00ab259b5bf786de5f",
+          "md5": "3ec7198fc935d83c3eacff1ed4095ce4",
+          "sha256": "b2f003589b60924909c0acde472590c5ea83906986a7a25b6f7929eb20923b7b"
+        },
+        "downloads": -1,
+        "filename": "requests-2.8.0.tar.gz",
+        "has_sig": false,
+        "md5_digest": "3ec7198fc935d83c3eacff1ed4095ce4",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "requires_python": null,
+        "size": 457879,
+        "upload_time": "2015-10-06T14:48:08",
+        "upload_time_iso_8601": "2015-10-06T14:48:08.860481Z",
+        "url": "https://files.pythonhosted.org/packages/1b/92/0632a7eb5e94bfedd300a3a5f4ebbf8505fd9768ba00ab259b5bf786de5f/requests-2.8.0.tar.gz",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    ],
+    "2.8.1": [
+      {
+        "comment_text": "",
+        "core-metadata": {
+          "sha256": "73de11e30fa6e757ff771ab7340ada092bee9f7b0b8f9281166988ab844d3b48"
+        },
+        "digests": {
+          "blake2b_256": "c00fa911a44c89ba01b23d8fe3defbdfca1e962de6f11a11da32658902cdc2a4",
+          "md5": "46f1d621daa3ab38958a42f51478b1ee",
+          "sha256": "89f1b1f25dcd7b68f514e8d341a5b2eb466f960ae756822eaab480a3c1a81c28"
+        },
+        "downloads": -1,
+        "filename": "requests-2.8.1-py2.py3-none-any.whl",
+        "has_sig": false,
+        "md5_digest": "46f1d621daa3ab38958a42f51478b1ee",
+        "packagetype": "bdist_wheel",
+        "python_version": "2.7",
+        "requires_python": null,
+        "size": 497953,
+        "upload_time": "2015-10-13T12:56:41",
+        "upload_time_iso_8601": "2015-10-13T12:56:41.375848Z",
+        "url": "https://files.pythonhosted.org/packages/c0/0f/a911a44c89ba01b23d8fe3defbdfca1e962de6f11a11da32658902cdc2a4/requests-2.8.1-py2.py3-none-any.whl",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "comment_text": "",
+        "core-metadata": false,
+        "digests": {
+          "blake2b_256": "382d290d33417c079a5248fcd06b0b8492acdd1851e54e4bdad54c3859dab600",
+          "md5": "a27ea3d72d7822906ddce5e252d6add9",
+          "sha256": "84fe8d5bf4dcdcc49002446c47a146d17ac10facf00d9086659064ac43b6c25b"
+        },
+        "downloads": -1,
+        "filename": "requests-2.8.1.tar.gz",
+        "has_sig": false,
+        "md5_digest": "a27ea3d72d7822906ddce5e252d6add9",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "requires_python": null,
+        "size": 480803,
+        "upload_time": "2015-10-13T12:56:34",
+        "upload_time_iso_8601": "2015-10-13T12:56:34.254896Z",
+        "url": "https://files.pythonhosted.org/packages/38/2d/290d33417c079a5248fcd06b0b8492acdd1851e54e4bdad54c3859dab600/requests-2.8.1.tar.gz",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    ],
+    "2.9.0": [
+      {
+        "comment_text": "",
+        "core-metadata": {
+          "sha256": "85e8127259ca2259091f048ce1f34517e9c2825c3ced273250ed420cc45ec478"
+        },
+        "digests": {
+          "blake2b_256": "bfb7c0b5a7fcf561577178ffd65af9af37c412cf6fbb1a2a198b9308b343d63f",
+          "md5": "149560afb69fe9e5048d05322eeb8ada",
+          "sha256": "1f4726bc7636edcbd141ba9c868dd92ecb77dbc869f68a28c32e9e149b070854"
+        },
+        "downloads": -1,
+        "filename": "requests-2.9.0-py2.py3-none-any.whl",
+        "has_sig": false,
+        "md5_digest": "149560afb69fe9e5048d05322eeb8ada",
+        "packagetype": "bdist_wheel",
+        "python_version": "2.7",
+        "requires_python": null,
+        "size": 500695,
+        "upload_time": "2015-12-15T15:30:34",
+        "upload_time_iso_8601": "2015-12-15T15:30:34.276097Z",
+        "url": "https://files.pythonhosted.org/packages/bf/b7/c0b5a7fcf561577178ffd65af9af37c412cf6fbb1a2a198b9308b343d63f/requests-2.9.0-py2.py3-none-any.whl",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "comment_text": "",
+        "core-metadata": false,
+        "digests": {
+          "blake2b_256": "e4993e33bfe263894278a094c374f87031554406e57fd0b1ad22520357556627",
+          "md5": "2f46fdceaf4f63e5e3665a8cb50d284f",
+          "sha256": "4881966532b5a36c552244fd909de66d1b8c4a26086f56fd5837cfcde63f8eb8"
+        },
+        "downloads": -1,
+        "filename": "requests-2.9.0.tar.gz",
+        "has_sig": false,
+        "md5_digest": "2f46fdceaf4f63e5e3665a8cb50d284f",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "requires_python": null,
+        "size": 483589,
+        "upload_time": "2015-12-15T15:29:58",
+        "upload_time_iso_8601": "2015-12-15T15:29:58.086640Z",
+        "url": "https://files.pythonhosted.org/packages/e4/99/3e33bfe263894278a094c374f87031554406e57fd0b1ad22520357556627/requests-2.9.0.tar.gz",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    ],
+    "2.9.1": [
+      {
+        "comment_text": "",
+        "core-metadata": {
+          "sha256": "5f800ad142ffe2456e6c58f0b365a620b2a7544ad15825885abeeacfffc7e498"
+        },
+        "digests": {
+          "blake2b_256": "b8f73bb4d18c234a8ce7044d5ee2e1082b7d72bf6c550afb8d51ae266dea56f1",
+          "md5": "58a444aaa02780ad01983f5f540e67b2",
+          "sha256": "113fbba5531a9e34945b7d36b33a084e8ba5d0664b703c81a7c572d91919a5b8"
+        },
+        "downloads": -1,
+        "filename": "requests-2.9.1-py2.py3-none-any.whl",
+        "has_sig": false,
+        "md5_digest": "58a444aaa02780ad01983f5f540e67b2",
+        "packagetype": "bdist_wheel",
+        "python_version": "2.7",
+        "requires_python": null,
+        "size": 501205,
+        "upload_time": "2015-12-21T14:55:10",
+        "upload_time_iso_8601": "2015-12-21T14:55:10.646407Z",
+        "url": "https://files.pythonhosted.org/packages/b8/f7/3bb4d18c234a8ce7044d5ee2e1082b7d72bf6c550afb8d51ae266dea56f1/requests-2.9.1-py2.py3-none-any.whl",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "comment_text": "",
+        "core-metadata": false,
+        "digests": {
+          "blake2b_256": "f96d07c44fb1ebe04d069459a189e7dab9e4abfe9432adcd4477367c25332748",
+          "md5": "0b7f480d19012ec52bab78292efd976d",
+          "sha256": "c577815dd00f1394203fc44eb979724b098f88264a9ef898ee45b8e5e9cf587f"
+        },
+        "downloads": -1,
+        "filename": "requests-2.9.1.tar.gz",
+        "has_sig": false,
+        "md5_digest": "0b7f480d19012ec52bab78292efd976d",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "requires_python": null,
+        "size": 484252,
+        "upload_time": "2015-12-21T14:55:00",
+        "upload_time_iso_8601": "2015-12-21T14:55:00.266465Z",
+        "url": "https://files.pythonhosted.org/packages/f9/6d/07c44fb1ebe04d069459a189e7dab9e4abfe9432adcd4477367c25332748/requests-2.9.1.tar.gz",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    ],
+    "2.9.2": [
+      {
+        "comment_text": "",
+        "core-metadata": {
+          "sha256": "c46d96075811049bd34d81c6e791983ee8966317f41fe2c2af99ec4cac77fe6d"
+        },
+        "digests": {
+          "blake2b_256": "8be7229a428b8eb9a7f925ef16ff09ab25856efe789410d661f10157919f2ae2",
+          "md5": "afecc76f13f3ae5e5dab18ae64c73c84",
+          "sha256": "22a8c72dfc7fc18db1aca6784e97a638e9d09abe2cd387be473f88bd6dcba22f"
+        },
+        "downloads": -1,
+        "filename": "requests-2.9.2-py2.py3-none-any.whl",
+        "has_sig": false,
+        "md5_digest": "afecc76f13f3ae5e5dab18ae64c73c84",
+        "packagetype": "bdist_wheel",
+        "python_version": "2.7",
+        "requires_python": null,
+        "size": 502812,
+        "upload_time": "2016-04-29T21:57:23",
+        "upload_time_iso_8601": "2016-04-29T21:57:23.021820Z",
+        "url": "https://files.pythonhosted.org/packages/8b/e7/229a428b8eb9a7f925ef16ff09ab25856efe789410d661f10157919f2ae2/requests-2.9.2-py2.py3-none-any.whl",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      {
+        "comment_text": "",
+        "core-metadata": false,
+        "digests": {
+          "blake2b_256": "64202133a092a0e87d1c250fe48704974b73a1341b7e4f800edecf40462a825d",
+          "md5": "18d0e51cd5e84c7d8b6dcbdd51551984",
+          "sha256": "d8be941a08cf36e4f424ac76073eb911e5e646a33fcb3402e1642c426bf34682"
+        },
+        "downloads": -1,
+        "filename": "requests-2.9.2.tar.gz",
+        "has_sig": false,
+        "md5_digest": "18d0e51cd5e84c7d8b6dcbdd51551984",
+        "packagetype": "sdist",
+        "python_version": "source",
+        "requires_python": null,
+        "size": 474018,
+        "upload_time": "2016-04-29T21:57:10",
+        "upload_time_iso_8601": "2016-04-29T21:57:10.487144Z",
+        "url": "https://files.pythonhosted.org/packages/64/20/2133a092a0e87d1c250fe48704974b73a1341b7e4f800edecf40462a825d/requests-2.9.2.tar.gz",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    ]
+  },
+  "urls": [
+    {
+      "comment_text": null,
+      "core-metadata": {
+        "sha256": "8c384ba3e979480faae2859d3c5e6c1276dd2c3616e322e124d52c8cfc556f27"
+      },
+      "digests": {
+        "blake2b_256": "a0f4c67b0b3f1b9245e8d266f0f112c500d50e5b4e83cb6f3b71b6528104182a",
+        "md5": "cc4287951c320ff794e5e183c7a91f85",
+        "sha256": "2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0"
+      },
+      "downloads": -1,
+      "filename": "requests-2.34.2-py3-none-any.whl",
+      "has_sig": false,
+      "md5_digest": "cc4287951c320ff794e5e183c7a91f85",
+      "packagetype": "bdist_wheel",
+      "python_version": "py3",
+      "requires_python": ">=3.10",
+      "size": 73075,
+      "upload_time": "2026-05-14T19:25:26",
+      "upload_time_iso_8601": "2026-05-14T19:25:26.443000Z",
+      "url": "https://files.pythonhosted.org/packages/a0/f4/c67b0b3f1b9245e8d266f0f112c500d50e5b4e83cb6f3b71b6528104182a/requests-2.34.2-py3-none-any.whl",
+      "yanked": false,
+      "yanked_reason": null
+    },
+    {
+      "comment_text": null,
+      "core-metadata": false,
+      "digests": {
+        "blake2b_256": "acc3e2a2b89f2d3e2179abd6d00ebd70bff6273f37fb3e0cc209f48b39d00cbf",
+        "md5": "611e438d0803e962500225f9807a475e",
+        "sha256": "f288924cae4e29463698d6d60bc6a4da69c89185ad1e0bcc4104f584e960b9ed"
+      },
+      "downloads": -1,
+      "filename": "requests-2.34.2.tar.gz",
+      "has_sig": false,
+      "md5_digest": "611e438d0803e962500225f9807a475e",
+      "packagetype": "sdist",
+      "python_version": "source",
+      "requires_python": ">=3.10",
+      "size": 142856,
+      "upload_time": "2026-05-14T19:25:27",
+      "upload_time_iso_8601": "2026-05-14T19:25:27.735762Z",
+      "url": "https://files.pythonhosted.org/packages/ac/c3/e2a2b89f2d3e2179abd6d00ebd70bff6273f37fb3e0cc209f48b39d00cbf/requests-2.34.2.tar.gz",
+      "yanked": false,
+      "yanked_reason": null
+    }
+  ]
+}
