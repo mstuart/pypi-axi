@@ -106,4 +106,11 @@ describe("viewCommand", () => {
   it("requires a package name", async () => {
     await expect(viewCommand([])).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
   });
+
+  it("rejects an unknown flag and lists the valid ones", async () => {
+    await expect(viewCommand(["requests", "--bogus"])).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      suggestions: expect.arrayContaining(["valid flags: --full, --version"]),
+    });
+  });
 });

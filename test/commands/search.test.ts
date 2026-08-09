@@ -12,4 +12,11 @@ describe("searchCommand", () => {
   it("never scrapes the HTML search page even with no args", async () => {
     await expect(searchCommand([])).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
   });
+
+  it("rejects an unknown flag before the not-supported error", async () => {
+    await expect(searchCommand(["--bogus"])).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      suggestions: expect.arrayContaining(["valid flags: (none)"]),
+    });
+  });
 });

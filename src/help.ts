@@ -59,11 +59,16 @@ Show last-day, last-week, and last-month download counts from pypistats.org.
 
 Examples:
   pypi-axi downloads requests
+  pypi-axi downloads numpy
 `,
   search: `pypi-axi search
 
 PyPI has no public search API, so this always returns an error suggesting
 \`pypi-axi view <pkg>\` instead of scraping the HTML search page.
+
+Examples:
+  pypi-axi search flask       # errors — use view instead
+  pypi-axi view flask         # the suggested alternative
 `,
   setup: `pypi-axi setup hooks
 
@@ -71,6 +76,7 @@ Install or repair session-start hooks so agents see pypi-axi guidance at the sta
 of each session. Supports Claude Code, Codex, and OpenCode. Idempotent.
 
 Examples:
-  pypi-axi setup hooks
+  pypi-axi setup hooks   # first run: installs hooks
+  pypi-axi setup hooks   # re-run anytime: no-op if already installed
 `,
 };

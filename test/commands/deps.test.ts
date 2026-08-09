@@ -29,6 +29,7 @@ describe("depsCommand", () => {
       { dep: "importlib-metadata", spec: ">=3.6.0", marker: 'python_version < "3.10"' },
       { dep: "asgiref", spec: ">=3.2", marker: 'extra == "async"' },
     ]);
+    expect(out.help).toEqual(["Run `pypi-axi view Flask` for package details"]);
   });
 
   it("returns a definitive empty state when there are no dependencies", async () => {
@@ -38,6 +39,7 @@ describe("depsCommand", () => {
     const out = await depsCommand(["leaf"]);
     expect(out.deps).toBe("0 dependencies for leaf 1.0");
     expect(out.count).toBeUndefined();
+    expect(out.help).toBeUndefined();
   });
 
   it("treats a missing requires_dist the same as an empty one", async () => {
@@ -59,5 +61,12 @@ describe("depsCommand", () => {
 
   it("requires a package name", async () => {
     await expect(depsCommand([])).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
+  });
+
+  it("rejects an unknown flag", async () => {
+    await expect(depsCommand(["flask", "--bogus"])).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      suggestions: expect.arrayContaining(["valid flags: --version"]),
+    });
   });
 });

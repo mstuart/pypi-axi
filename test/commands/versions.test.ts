@@ -45,4 +45,26 @@ describe("versionsCommand", () => {
   it("requires a package name", async () => {
     await expect(versionsCommand([])).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
   });
+
+  it("rejects an unknown flag", async () => {
+    await expect(versionsCommand(["demo", "--bogus"])).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      suggestions: expect.arrayContaining(["valid flags: --limit"]),
+    });
+  });
+
+  it("omits help when the full list is returned", async () => {
+    mockFetch({ "pypi.org/pypi/demo/json": { json: packument() } });
+    const out = await versionsCommand(["demo"]);
+    expect(out.help).toBeUndefined();
+  });
+
+  it("suggests raising --limit and viewing the package when the list is truncated", async () => {
+    mockFetch({ "pypi.org/pypi/demo/json": { json: packument() } });
+    const out = await versionsCommand(["demo", "--limit", "2"]);
+    expect(out.help).toEqual([
+      "Run `pypi-axi versions demo --limit 4` to see more",
+      "Run `pypi-axi view demo` for package details",
+    ]);
+  });
 });

@@ -10,4 +10,11 @@ describe("setupCommand", () => {
     await expect(setupCommand([])).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
     await expect(setupCommand(["nope"])).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
   });
+
+  it("rejects an unknown flag", async () => {
+    await expect(setupCommand(["hooks", "--bogus"])).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      suggestions: expect.arrayContaining(["valid flags: (none)"]),
+    });
+  });
 });
