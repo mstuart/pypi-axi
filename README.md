@@ -3,7 +3,6 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/pypi-axi"><img alt="npm" src="https://img.shields.io/npm/v/pypi-axi?style=flat-square" /></a>
   <a href="https://github.com/mstuart/pypi-axi/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/mstuart/pypi-axi/ci.yml?style=flat-square&label=ci" /></a>
-  <a href="https://github.com/mstuart/pypi-axi/actions/workflows/release.yml"><img alt="Release" src="https://img.shields.io/github/actions/workflow/status/mstuart/pypi-axi/release.yml?style=flat-square&label=release" /></a>
   <img alt="Platform" src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-blue?style=flat-square" />
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" /></a>
 </p>
