@@ -1,0 +1,47 @@
+import { AxiError } from "axi-sdk-js";
+import { parseFlags, parseLimit } from "../args.js";
+import { isoDate } from "../format.js";
+import { fetchPackument, type PypiFile } from "../pypi.js";
+
+const DEFAULT_LIMIT = 20;
+const MAX_LIMIT = 100;
+
+function latestUpload(files: PypiFile[]): string | undefined {
+  const dates = files.map((f) => f.upload_time_iso_8601).filter((d): d is string => Boolean(d));
+  return dates.length > 0 ? dates.reduce((a, b) => (a > b ? a : b)) : undefined;
+}
+
+export async function versionsCommand(args: string[]): Promise<Record<string, unknown>> {
+  const { positionals, flags } = parseFlags(args);
+  const pkg = positionals[0];
+  if (!pkg) {
+    throw new AxiError("a package name is required", "VALIDATION_ERROR", [
+      "pypi-axi versions <pkg> [--limit 20]",
+    ]);
+  }
+
+  const limit = parseLimit(flags.limit, DEFAULT_LIMIT, MAX_LIMIT);
+  const packument = await fetchPackument(pkg);
+
+  const entries = Object.entries(packument.releases)
+    .map(([version, files]) => ({
+      version,
+      upload: latestUpload(files),
+      yanked: files.length > 0 && files.every((f) => f.yanked),
+    }))
+    .filter((entry): entry is { version: string; upload: string; yanked: boolean } =>
+      Boolean(entry.upload),
+    )
+    .sort((a, b) => (a.upload < b.upload ? 1 : a.upload > b.upload ? -1 : 0));
+
+  const versions = entries.slice(0, limit).map((entry) => ({
+    version: entry.version,
+    uploadDate: isoDate(entry.upload),
+    yanked: entry.yanked ? "yes" : "no",
+  }));
+
+  return {
+    count: `${versions.length} of ${entries.length} total`,
+    versions,
+  };
+}

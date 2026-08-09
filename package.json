@@ -1,0 +1,53 @@
+{
+  "name": "pypi-axi",
+  "version": "0.1.0",
+  "description": "Inspect PyPI packages with token-efficient output — an AXI (Agent eXperience Interface).",
+  "keywords": [
+    "axi",
+    "agent",
+    "cli",
+    "pypi",
+    "python",
+    "registry",
+    "toon"
+  ],
+  "license": "MIT",
+  "author": "Mark Stuart",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mstuart/pypi-axi.git"
+  },
+  "type": "module",
+  "bin": {
+    "pypi-axi": "./dist/bin/pypi-axi.js"
+  },
+  "files": [
+    "dist",
+    "skills/pypi-axi",
+    "LICENSE",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:skill": "tsx scripts/build-skill.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev": "tsx bin/pypi-axi.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "axi-sdk-js": "^0.1.10"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}
