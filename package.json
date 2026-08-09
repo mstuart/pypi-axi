@@ -1,6 +1,6 @@
 {
   "name": "pypi-axi",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Inspect PyPI packages with token-efficient output — an AXI (Agent eXperience Interface).",
   "keywords": [
     "axi",
