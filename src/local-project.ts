@@ -1,7 +1,15 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { parseRequirement } from "./pep508.js";
 import { normalizeName } from "./format.js";
+import { parseRequirement } from "./pep508.js";
+
+const LINE_PATTERN = /\r?\n/;
+const POETRY_DEPENDENCIES_PATTERN =
+  /\[tool\.poetry\.dependencies\]([\s\S]*?)(?:\n\[|$)/;
+const POETRY_ENTRY_PATTERN = /^([A-Za-z0-9][A-Za-z0-9._-]*)\s*=\s*(.+)$/;
+const QUOTED_STRING_PATTERN = /"([^"]*)"|'([^']*)'/g;
+const SETUP_REQUIREMENTS_PATTERN = /install_requires\s*=\s*\[([\s\S]*?)\]/;
+const STRING_VALUE_PATTERN = /^"([^"]*)"|^'([^']*)'/;
 
 export interface DeclaredDependency {
   name: string;
@@ -9,8 +17,8 @@ export interface DeclaredDependency {
 }
 
 export interface LocalProject {
-  source: "requirements.txt" | "pyproject.toml" | "setup.py";
   dependencies: DeclaredDependency[];
+  source: "requirements.txt" | "pyproject.toml" | "setup.py";
 }
 
 /**
@@ -20,28 +28,32 @@ export interface LocalProject {
  * not full TOML/AST parsers — good enough to answer "what does this project
  * declare" without adding a parsing dependency.
  */
-export function readLocalProject(dir: string = process.cwd()): LocalProject | null {
+export function readLocalProject(
+  dir: string = process.cwd()
+): LocalProject | null {
   const requirementsPath = join(dir, "requirements.txt");
   if (existsSync(requirementsPath)) {
     return {
+      dependencies: parseRequirementsTxt(
+        readFileSync(requirementsPath, "utf8")
+      ),
       source: "requirements.txt",
-      dependencies: parseRequirementsTxt(readFileSync(requirementsPath, "utf8")),
     };
   }
 
   const pyprojectPath = join(dir, "pyproject.toml");
   if (existsSync(pyprojectPath)) {
     return {
-      source: "pyproject.toml",
       dependencies: parsePyprojectToml(readFileSync(pyprojectPath, "utf8")),
+      source: "pyproject.toml",
     };
   }
 
   const setupPath = join(dir, "setup.py");
   if (existsSync(setupPath)) {
     return {
-      source: "setup.py",
       dependencies: parseSetupPy(readFileSync(setupPath, "utf8")),
+      source: "setup.py",
     };
   }
 
@@ -50,14 +62,18 @@ export function readLocalProject(dir: string = process.cwd()): LocalProject | nu
 
 function toDeclared(entry: string): DeclaredDependency {
   const parsed = parseRequirement(entry);
-  return parsed.specifier ? { name: parsed.name, spec: parsed.specifier } : { name: parsed.name };
+  return parsed.specifier
+    ? { name: parsed.name, spec: parsed.specifier }
+    : { name: parsed.name };
 }
 
 function parseRequirementsTxt(text: string): DeclaredDependency[] {
   const deps: DeclaredDependency[] = [];
-  for (const rawLine of text.split(/\r?\n/)) {
+  for (const rawLine of text.split(LINE_PATTERN)) {
     const line = rawLine.split("#")[0].trim();
-    if (!line || line.startsWith("-")) continue; // skip -r/-e/--flag lines
+    if (!line || line.startsWith("-")) {
+      continue; // skip -r/-e/--flag lines
+    }
     deps.push(toDeclared(line));
   }
   return dedupe(deps);
@@ -80,43 +96,58 @@ function parsePyprojectToml(text: string): DeclaredDependency[] {
 }
 
 function extractTomlStringArray(text: string, key: string): string[] {
-  const match = text.match(new RegExp(`^\\s*${key}\\s*=\\s*\\[([\\s\\S]*?)\\]`, "m"));
-  if (!match) return [];
+  const match = text.match(
+    new RegExp(`^\\s*${key}\\s*=\\s*\\[([\\s\\S]*?)\\]`, "m")
+  );
+  if (!match) {
+    return [];
+  }
   return extractQuotedStrings(match[1]);
 }
 
 function extractPoetryDependencies(text: string): DeclaredDependency[] {
-  const match = text.match(/\[tool\.poetry\.dependencies\]([\s\S]*?)(?:\n\[|$)/);
-  if (!match) return [];
+  const match = text.match(POETRY_DEPENDENCIES_PATTERN);
+  if (!match) {
+    return [];
+  }
 
   const deps: DeclaredDependency[] = [];
-  for (const rawLine of match[1].split(/\r?\n/)) {
+  for (const rawLine of match[1].split(LINE_PATTERN)) {
     const line = rawLine.trim();
-    if (!line || line.startsWith("#")) continue;
-    const kv = line.match(/^([A-Za-z0-9][A-Za-z0-9._-]*)\s*=\s*(.+)$/);
-    if (!kv) continue;
-    const name = kv[1];
-    if (name.toLowerCase() === "python") continue; // interpreter constraint, not a dependency
+    if (!line || line.startsWith("#")) {
+      continue;
+    }
+    const kv = line.match(POETRY_ENTRY_PATTERN);
+    if (!kv) {
+      continue;
+    }
+    const [, name, rawValue] = kv;
+    if (name.toLowerCase() === "python") {
+      continue; // interpreter constraint, not a dependency
+    }
 
-    const stringMatch = kv[2].trim().match(/^"([^"]*)"|^'([^']*)'/);
-    const spec = stringMatch ? stringMatch[1] ?? stringMatch[2] : undefined;
+    const stringMatch = rawValue.trim().match(STRING_VALUE_PATTERN);
+    const spec = stringMatch ? (stringMatch[1] ?? stringMatch[2]) : undefined;
     deps.push(spec ? { name, spec } : { name });
   }
   return deps;
 }
 
 function parseSetupPy(text: string): DeclaredDependency[] {
-  const match = text.match(/install_requires\s*=\s*\[([\s\S]*?)\]/);
-  if (!match) return [];
+  const match = text.match(SETUP_REQUIREMENTS_PATTERN);
+  if (!match) {
+    return [];
+  }
   return dedupe(extractQuotedStrings(match[1]).map(toDeclared));
 }
 
 function extractQuotedStrings(body: string): string[] {
   const items: string[] = [];
-  const stringRegex = /"([^"]*)"|'([^']*)'/g;
-  let match: RegExpExecArray | null;
-  while ((match = stringRegex.exec(body))) {
+  QUOTED_STRING_PATTERN.lastIndex = 0;
+  let match = QUOTED_STRING_PATTERN.exec(body);
+  while (match) {
     items.push(match[1] ?? match[2] ?? "");
+    match = QUOTED_STRING_PATTERN.exec(body);
   }
   return items.filter((item) => item.length > 0);
 }
@@ -125,7 +156,9 @@ function dedupe(deps: DeclaredDependency[]): DeclaredDependency[] {
   const seen = new Map<string, DeclaredDependency>();
   for (const dep of deps) {
     const key = normalizeName(dep.name);
-    if (!seen.has(key)) seen.set(key, dep);
+    if (!seen.has(key)) {
+      seen.set(key, dep);
+    }
   }
   return [...seen.values()];
 }

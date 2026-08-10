@@ -9,7 +9,9 @@ afterEach(() => vi.unstubAllGlobals());
 
 function tempProject(requirements: string | null): string {
   const dir = mkdtempSync(join(tmpdir(), "pypi-axi-home-"));
-  if (requirements !== null) writeFileSync(join(dir, "requirements.txt"), requirements);
+  if (requirements !== null) {
+    writeFileSync(join(dir, "requirements.txt"), requirements);
+  }
   return dir;
 }
 
@@ -22,8 +24,12 @@ describe("homeCommand", () => {
 
   it("builds a name/declaredSpec/latestAvailable table for declared deps", async () => {
     mockFetch({
-      "pypi.org/pypi/requests/json": { json: { info: { name: "requests", version: "2.34.2" } } },
-      "pypi.org/pypi/flask/json": { json: { info: { name: "flask", version: "3.1.3" } } },
+      "pypi.org/pypi/flask/json": {
+        json: { info: { name: "flask", version: "3.1.3" } },
+      },
+      "pypi.org/pypi/requests/json": {
+        json: { info: { name: "requests", version: "2.34.2" } },
+      },
     });
     const dir = tempProject("requests==2.31.0\nflask\n");
     const out = await homeCommand([], undefined, dir);
@@ -31,8 +37,8 @@ describe("homeCommand", () => {
     expect(project.source).toBe("requirements.txt");
     expect(project.dependencyCount).toBe(2);
     expect(project.dependencies).toEqual([
-      { name: "requests", declaredSpec: "==2.31.0", latestAvailable: "2.34.2" },
-      { name: "flask", declaredSpec: "any", latestAvailable: "3.1.3" },
+      { declaredSpec: "==2.31.0", latestAvailable: "2.34.2", name: "requests" },
+      { declaredSpec: "any", latestAvailable: "3.1.3", name: "flask" },
     ]);
   });
 
@@ -41,7 +47,7 @@ describe("homeCommand", () => {
     const dir = tempProject("doesnotexist==1.0\n");
     const out = await homeCommand([], undefined, dir);
     const project = out.project as Record<string, unknown>;
-    const deps = project.dependencies as Array<Record<string, unknown>>;
+    const deps = project.dependencies as Record<string, unknown>[];
     expect(deps[0].latestAvailable).toBe("unknown");
   });
 });
