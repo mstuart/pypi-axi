@@ -8,16 +8,22 @@ const MAX_LIMIT = 100;
 const USAGE = "pypi-axi versions <pkg> [--limit 20]";
 
 function latestUpload(files: PypiFile[]): string | undefined {
-  const dates = files.map((f) => f.upload_time_iso_8601).filter((d): d is string => Boolean(d));
+  const dates = files
+    .map((f) => f.upload_time_iso_8601)
+    .filter((d): d is string => Boolean(d));
   return dates.length > 0 ? dates.reduce((a, b) => (a > b ? a : b)) : undefined;
 }
 
-export async function versionsCommand(args: string[]): Promise<Record<string, unknown>> {
+export async function versionsCommand(
+  args: string[]
+): Promise<Record<string, unknown>> {
   const { positionals, flags } = parseFlags(args);
   assertKnownFlags(flags, ["limit"], USAGE);
-  const pkg = positionals[0];
+  const [pkg] = positionals;
   if (!pkg) {
-    throw new AxiError("a package name is required", "VALIDATION_ERROR", [USAGE]);
+    throw new AxiError("a package name is required", "VALIDATION_ERROR", [
+      USAGE,
+    ]);
   }
 
   const limit = parseLimit(flags.limit, DEFAULT_LIMIT, MAX_LIMIT);
@@ -25,18 +31,19 @@ export async function versionsCommand(args: string[]): Promise<Record<string, un
 
   const entries = Object.entries(packument.releases)
     .map(([version, files]) => ({
-      version,
       upload: latestUpload(files),
+      version,
       yanked: files.length > 0 && files.every((f) => f.yanked),
     }))
-    .filter((entry): entry is { version: string; upload: string; yanked: boolean } =>
-      Boolean(entry.upload),
+    .filter(
+      (entry): entry is { version: string; upload: string; yanked: boolean } =>
+        Boolean(entry.upload)
     )
-    .sort((a, b) => (a.upload < b.upload ? 1 : a.upload > b.upload ? -1 : 0));
+    .sort((a, b) => b.upload.localeCompare(a.upload));
 
   const versions = entries.slice(0, limit).map((entry) => ({
-    version: entry.version,
     uploadDate: isoDate(entry.upload),
+    version: entry.version,
     yanked: entry.yanked ? "yes" : "no",
   }));
 

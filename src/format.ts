@@ -6,7 +6,9 @@ export function collapseWhitespace(text: string): string {
 /** Collapse then hard-truncate a single-line value, appending an ellipsis. */
 export function truncateLine(text: string, max: number): string {
   const line = collapseWhitespace(text);
-  if (line.length <= max) return line;
+  if (line.length <= max) {
+    return line;
+  }
   return `${line.slice(0, max).trimEnd()} …`;
 }
 
@@ -34,9 +36,13 @@ export function truncateWithCount(text: string, max: number): TruncateResult {
 
 /** Convert an ISO 8601 timestamp to a YYYY-MM-DD date. */
 export function isoDate(timestamp: string | undefined): string | undefined {
-  if (!timestamp) return undefined;
+  if (!timestamp) {
+    return;
+  }
   const date = new Date(timestamp);
-  if (Number.isNaN(date.getTime())) return undefined;
+  if (Number.isNaN(date.getTime())) {
+    return;
+  }
   return date.toISOString().slice(0, 10);
 }
 
@@ -46,5 +52,8 @@ export function isoDate(timestamp: string | undefined): string | undefined {
  * building a PyPI URL, since PyPI treats these forms as equivalent.
  */
 export function normalizeName(name: string): string {
-  return name.trim().toLowerCase().replace(/[-_.]+/g, "-");
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/[-_.]+/g, "-");
 }

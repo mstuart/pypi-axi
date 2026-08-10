@@ -7,7 +7,12 @@ import { mockFetch } from "../helpers.js";
 afterEach(() => vi.unstubAllGlobals());
 
 function fixture(name: string): unknown {
-  return JSON.parse(readFileSync(fileURLToPath(new URL(`../fixtures/${name}`, import.meta.url)), "utf8"));
+  return JSON.parse(
+    readFileSync(
+      fileURLToPath(new URL(`../fixtures/${name}`, import.meta.url)),
+      "utf8"
+    )
+  );
 }
 
 const requestsFixture = fixture("requests.json");
@@ -27,14 +32,16 @@ describe("viewCommand", () => {
     expect(pkg.releaseCount).toBe(13); // release count in the trimmed fixture
     expect(pkg.dependencyCount).toBe(6);
     expect(pkg.latestUpload).toBe("2026-05-14");
-    expect((pkg.projectUrls as Record<string, string>).Source).toBe("https://github.com/psf/requests");
+    expect((pkg.projectUrls as Record<string, string>).Source).toBe(
+      "https://github.com/psf/requests"
+    );
     expect(out.help).toBeUndefined();
   });
 
   it("fetches a specific --version and reports its own upload date", async () => {
     mockFetch({
-      "pypi.org/pypi/requests/json": { json: requestsFixture },
       "pypi.org/pypi/requests/2.31.0/json": { json: requests2310Fixture },
+      "pypi.org/pypi/requests/json": { json: requestsFixture },
     });
     const out = await viewCommand(["requests", "--version", "2.31.0"]);
     const pkg = out.package as Record<string, unknown>;
@@ -47,32 +54,49 @@ describe("viewCommand", () => {
     const long = "word ".repeat(400); // ~2000 chars
     mockFetch({
       "pypi.org/pypi/requests/json": {
-        json: { info: { name: "requests", version: "1.0", summary: long }, releases: {}, urls: [] },
+        json: {
+          info: { name: "requests", summary: long, version: "1.0" },
+          releases: {},
+          urls: [],
+        },
       },
     });
     const out = await viewCommand(["requests"]);
     const pkg = out.package as Record<string, unknown>;
     expect(pkg.summary as string).toContain("... (truncated,");
-    expect(out.help).toEqual(["Run `pypi-axi view requests --full` to see the complete summary"]);
+    expect(out.help).toEqual([
+      "Run `pypi-axi view requests --full` to see the complete summary",
+    ]);
   });
 
   it("returns the full summary with --full and no truncation hint", async () => {
     const long = "word ".repeat(400);
     mockFetch({
       "pypi.org/pypi/requests/json": {
-        json: { info: { name: "requests", version: "1.0", summary: long }, releases: {}, urls: [] },
+        json: {
+          info: { name: "requests", summary: long, version: "1.0" },
+          releases: {},
+          urls: [],
+        },
       },
     });
     const out = await viewCommand(["requests", "--full"]);
     expect(out.help).toBeUndefined();
-    expect(((out.package as Record<string, unknown>).summary as string)).not.toContain("truncated");
+    expect(
+      (out.package as Record<string, unknown>).summary as string
+    ).not.toContain("truncated");
   });
 
   it("derives author from author_email when author is null", async () => {
     mockFetch({
       "pypi.org/pypi/pkg/json": {
         json: {
-          info: { name: "pkg", version: "1.0", author: null, author_email: "Jane Doe <jane@example.com>" },
+          info: {
+            author: null,
+            author_email: "Jane Doe <jane@example.com>",
+            name: "pkg",
+            version: "1.0",
+          },
           releases: {},
           urls: [],
         },
@@ -85,7 +109,11 @@ describe("viewCommand", () => {
   it("omits null/empty fields instead of emitting them", async () => {
     mockFetch({
       "pypi.org/pypi/bare/json": {
-        json: { info: { name: "bare", version: "1.0" }, releases: {}, urls: [] },
+        json: {
+          info: { name: "bare", version: "1.0" },
+          releases: {},
+          urls: [],
+        },
       },
     });
     const out = await viewCommand(["bare"]);
@@ -100,11 +128,15 @@ describe("viewCommand", () => {
 
   it("translates a 404 into a NOT_FOUND error", async () => {
     mockFetch({ "pypi.org/pypi/nope/json": { status: 404 } });
-    await expect(viewCommand(["nope"])).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(viewCommand(["nope"])).rejects.toMatchObject({
+      code: "NOT_FOUND",
+    });
   });
 
   it("requires a package name", async () => {
-    await expect(viewCommand([])).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
+    await expect(viewCommand([])).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+    });
   });
 
   it("rejects an unknown flag and lists the valid ones", async () => {
