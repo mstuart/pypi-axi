@@ -2,7 +2,7 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { readLocalProject } from "../src/localProject.js";
+import { readLocalProject } from "../src/local-project.js";
 
 function tempDir(): string {
   return mkdtempSync(join(tmpdir(), "pypi-axi-"));
@@ -17,7 +17,14 @@ describe("readLocalProject", () => {
     const dir = tempDir();
     writeFileSync(
       join(dir, "requirements.txt"),
-      ["# a comment", "requests==2.31.0", "flask>=2.0", "numpy", "-r other.txt", ""].join("\n"),
+      [
+        "# a comment",
+        "requests==2.31.0",
+        "flask>=2.0",
+        "numpy",
+        "-r other.txt",
+        "",
+      ].join("\n")
     );
     const project = readLocalProject(dir);
     expect(project?.source).toBe("requirements.txt");
@@ -39,7 +46,7 @@ describe("readLocalProject", () => {
         '  "requests>=2.0",',
         '  "click",',
         "]",
-      ].join("\n"),
+      ].join("\n")
     );
     const project = readLocalProject(dir);
     expect(project?.source).toBe("pyproject.toml");
@@ -57,14 +64,14 @@ describe("readLocalProject", () => {
         "[tool.poetry.dependencies]",
         'python = "^3.10"',
         'requests = "^2.31"',
-        "click = { version = \"^8.0\" }",
+        'click = { version = "^8.0" }',
         "",
         "[tool.poetry.dev-dependencies]",
         'pytest = "^8.0"',
-      ].join("\n"),
+      ].join("\n")
     );
     const project = readLocalProject(dir);
-    const names = project?.dependencies.map((d) => d.name);
+    const names = project.dependencies.map((d) => d.name);
     expect(names).toContain("requests");
     expect(names).not.toContain("python");
     expect(names).not.toContain("pytest");
@@ -83,7 +90,7 @@ describe("readLocalProject", () => {
         "    'click',",
         "  ],",
         ")",
-      ].join("\n"),
+      ].join("\n")
     );
     const project = readLocalProject(dir);
     expect(project?.source).toBe("setup.py");
@@ -102,7 +109,10 @@ describe("readLocalProject", () => {
 
   it("deduplicates dependencies declared under equivalent PEP 503 names", () => {
     const dir = tempDir();
-    writeFileSync(join(dir, "requirements.txt"), "Flask-Cors==1.0\nflask_cors==1.0\n");
+    writeFileSync(
+      join(dir, "requirements.txt"),
+      "Flask-Cors==1.0\nflask_cors==1.0\n"
+    );
     expect(readLocalProject(dir)?.dependencies).toHaveLength(1);
   });
 });

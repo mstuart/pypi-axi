@@ -1,7 +1,11 @@
+const PARENTHESIZED_SPECIFIER_PATTERN = /^\((.*)\)$/;
+const REQUIREMENT_PATTERN =
+  /^([A-Za-z0-9][A-Za-z0-9._-]*)\s*(?:\[[^\]]*\])?\s*(.*)$/;
+
 export interface ParsedRequirement {
+  marker?: string;
   name: string;
   specifier?: string;
-  marker?: string;
 }
 
 /**
@@ -17,23 +21,34 @@ export function parseRequirement(raw: string): ParsedRequirement {
   const entry = raw.trim();
   const [reqPart, markerPart] = splitOnce(entry, ";");
 
-  const match = reqPart.trim().match(/^([A-Za-z0-9][A-Za-z0-9._-]*)\s*(?:\[[^\]]*\])?\s*(.*)$/);
+  const match = reqPart.trim().match(REQUIREMENT_PATTERN);
   const name = (match?.[1] ?? reqPart.trim()).trim();
 
   let specifier = (match?.[2] ?? "").trim();
-  const parenMatch = specifier.match(/^\((.*)\)$/);
-  if (parenMatch) specifier = parenMatch[1].trim();
+  const parenMatch = specifier.match(PARENTHESIZED_SPECIFIER_PATTERN);
+  if (parenMatch) {
+    specifier = parenMatch[1].trim();
+  }
 
   const marker = markerPart?.trim();
 
   const result: ParsedRequirement = { name };
-  if (specifier) result.specifier = specifier;
-  if (marker) result.marker = marker;
+  if (specifier) {
+    result.specifier = specifier;
+  }
+  if (marker) {
+    result.marker = marker;
+  }
   return result;
 }
 
-function splitOnce(text: string, separator: string): [string, string | undefined] {
+function splitOnce(
+  text: string,
+  separator: string
+): [string, string | undefined] {
   const index = text.indexOf(separator);
-  if (index === -1) return [text, undefined];
+  if (index === -1) {
+    return [text, undefined];
+  }
   return [text.slice(0, index), text.slice(index + 1)];
 }

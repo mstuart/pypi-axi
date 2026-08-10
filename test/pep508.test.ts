@@ -14,20 +14,22 @@ describe("parseRequirement", () => {
   });
 
   it("parses a marker after a semicolon", () => {
-    expect(parseRequirement('PySocks!=1.5.7,>=1.5.6; extra == "socks"')).toEqual({
+    expect(
+      parseRequirement('PySocks!=1.5.7,>=1.5.6; extra == "socks"')
+    ).toEqual({
+      marker: 'extra == "socks"',
       name: "PySocks",
       specifier: "!=1.5.7,>=1.5.6",
-      marker: 'extra == "socks"',
     });
   });
 
   it("parses a python_version marker", () => {
     expect(
-      parseRequirement('importlib-metadata>=3.6.0; python_version < "3.10"'),
+      parseRequirement('importlib-metadata>=3.6.0; python_version < "3.10"')
     ).toEqual({
+      marker: 'python_version < "3.10"',
       name: "importlib-metadata",
       specifier: ">=3.6.0",
-      marker: 'python_version < "3.10"',
     });
   });
 

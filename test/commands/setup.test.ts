@@ -7,8 +7,12 @@ describe("setupCommand", () => {
   // actual ~/.claude and ~/.codex config. That path is covered by axi-sdk-js's
   // own test suite; here we only check the validation the command owns.
   it("rejects any setup subcommand other than hooks", async () => {
-    await expect(setupCommand([])).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
-    await expect(setupCommand(["nope"])).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
+    await expect(setupCommand([])).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+    });
+    await expect(setupCommand(["nope"])).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+    });
   });
 
   it("rejects an unknown flag", async () => {

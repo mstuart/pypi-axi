@@ -4,14 +4,19 @@ import { createSkillMarkdown, SKILL_DESCRIPTION } from "../src/skill.js";
 
 describe("createSkillMarkdown", () => {
   it("matches the committed skills/pypi-axi/SKILL.md", () => {
-    const committed = readFileSync(new URL("../skills/pypi-axi/SKILL.md", import.meta.url), "utf8");
+    const committed = readFileSync(
+      new URL("../skills/pypi-axi/SKILL.md", import.meta.url),
+      "utf8"
+    );
     expect(committed).toBe(createSkillMarkdown());
   });
 
   it("starts with valid frontmatter naming the skill and marking it not user-invocable", () => {
     const markdown = createSkillMarkdown();
     expect(markdown.startsWith("---\nname: pypi-axi\n")).toBe(true);
-    expect(markdown).toContain(`description: ${JSON.stringify(SKILL_DESCRIPTION)}`);
+    expect(markdown).toContain(
+      `description: ${JSON.stringify(SKILL_DESCRIPTION)}`
+    );
     expect(markdown).toContain("user-invocable: false");
   });
 

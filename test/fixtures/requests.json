@@ -34,17 +34,12 @@
       "last_month": -1,
       "last_week": -1
     },
-    "dynamic": [
-      "License-File"
-    ],
+    "dynamic": ["License-File"],
     "home_page": null,
     "keywords": null,
     "license": "Apache-2.0",
     "license_expression": null,
-    "license_files": [
-      "LICENSE",
-      "NOTICE"
-    ],
+    "license_files": ["LICENSE", "NOTICE"],
     "maintainer": null,
     "maintainer_email": "Ian Stapleton Cordasco <graffatcolmingov@gmail.com>, Nate Prewitt <nate.prewitt@gmail.com>",
     "name": "requests",
@@ -55,11 +50,7 @@
       "Documentation": "https://requests.readthedocs.io",
       "Source": "https://github.com/psf/requests"
     },
-    "provides_extra": [
-      "security",
-      "socks",
-      "use-chardet-on-py3"
-    ],
+    "provides_extra": ["security", "socks", "use-chardet-on-py3"],
     "release_url": "https://pypi.org/project/requests/2.34.2/",
     "requires_dist": [
       "charset_normalizer<4,>=2",

@@ -10,7 +10,9 @@ describe("searchCommand", () => {
   });
 
   it("never scrapes the HTML search page even with no args", async () => {
-    await expect(searchCommand([])).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
+    await expect(searchCommand([])).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+    });
   });
 
   it("rejects an unknown flag before the not-supported error", async () => {
