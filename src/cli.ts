@@ -14,18 +14,18 @@ export const DESCRIPTION =
 
 export async function main(): Promise<void> {
   await runAxiCli({
-    description: DESCRIPTION,
-    version: VERSION,
-    topLevelHelp: TOP_LEVEL_HELP,
-    getCommandHelp: (command) => COMMAND_HELP[command] ?? null,
-    home: (args) => homeCommand(args),
     commands: {
-      view: viewCommand,
-      versions: versionsCommand,
       deps: depsCommand,
       downloads: downloadsCommand,
       search: searchCommand,
       setup: setupCommand,
+      versions: versionsCommand,
+      view: viewCommand,
     },
+    description: DESCRIPTION,
+    getCommandHelp: (command) => COMMAND_HELP[command] ?? null,
+    home: (args) => homeCommand(args),
+    topLevelHelp: TOP_LEVEL_HELP,
+    version: VERSION,
   });
 }

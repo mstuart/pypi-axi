@@ -6,7 +6,10 @@ import { assertKnownFlags, parseFlags } from "../args.js";
  * retired). Return an honest, structured error instead of scraping the HTML
  * search page.
  */
-export async function searchCommand(args: string[]): Promise<Record<string, unknown>> {
+// biome-ignore lint/suspicious/useAwait: AXI command handlers intentionally share an async API.
+export async function searchCommand(
+  args: string[]
+): Promise<Record<string, unknown>> {
   const { flags } = parseFlags(args);
   assertKnownFlags(flags, [], "pypi-axi search");
   throw new AxiError("PyPI has no public search API", "VALIDATION_ERROR", [

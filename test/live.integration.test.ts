@@ -5,6 +5,9 @@ import { describe, expect, it } from "vitest";
 import { versionsCommand } from "../src/commands/versions.js";
 import { viewCommand } from "../src/commands/view.js";
 
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+const VERSION_COUNT_PATTERN = /^5 of \d+ total$/;
+
 async function isOnline(): Promise<boolean> {
   try {
     const response = await fetch("https://pypi.org/pypi/requests/json", {
@@ -32,12 +35,15 @@ describe.skipIf(!online)("live PyPI integration", () => {
 
   it("versions requests returns real release history newest-first", async () => {
     const out = await versionsCommand(["requests", "--limit", "5"]);
-    expect(out.count).toMatch(/^5 of \d+ total$/);
-    const versions = out.versions as Array<{ version: string; uploadDate: string }>;
+    expect(out.count).toMatch(VERSION_COUNT_PATTERN);
+    const versions = out.versions as Array<{
+      version: string;
+      uploadDate: string;
+    }>;
     expect(versions).toHaveLength(5);
     for (const entry of versions) {
       expect(entry.version).toBeTruthy();
-      expect(entry.uploadDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(entry.uploadDate).toMatch(DATE_PATTERN);
     }
     // newest-first
     const dates = versions.map((v) => v.uploadDate);

@@ -21,7 +21,7 @@ if (check) {
   }
   if (actual !== expected) {
     console.error(
-      "skills/pypi-axi/SKILL.md is out of date. Run `npm run build:skill` and commit the result.",
+      "skills/pypi-axi/SKILL.md is out of date. Run `npm run build:skill` and commit the result."
     );
     process.exit(1);
   }

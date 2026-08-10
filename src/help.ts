@@ -17,30 +17,6 @@ Run \`pypi-axi <command> --help\` for per-command details.
 `;
 
 export const COMMAND_HELP: Record<string, string> = {
-  view: `pypi-axi view <pkg> [--version X] [--full]
-
-Show package details: version, summary, author, license, required Python version,
-project URLs, release count, latest upload date, and dependency count.
-
-Flags:
-  --version <X>   Inspect a specific release instead of the latest
-  --full          Print the complete summary instead of a ~800 char preview
-
-Examples:
-  pypi-axi view requests
-  pypi-axi view django --version 4.2.0
-`,
-  versions: `pypi-axi versions <pkg> [--limit 20]
-
-List a package's release history, newest first, with upload dates and yanked status.
-
-Flags:
-  --limit <n>   Max versions shown (default 20, max 100)
-
-Examples:
-  pypi-axi versions flask
-  pypi-axi versions numpy --limit 50
-`,
   deps: `pypi-axi deps <pkg> [--version X]
 
 List a package's declared dependencies (from requires_dist): name, version
@@ -78,5 +54,29 @@ of each session. Supports Claude Code, Codex, and OpenCode. Idempotent.
 Examples:
   pypi-axi setup hooks   # first run: installs hooks
   pypi-axi setup hooks   # re-run anytime: no-op if already installed
+`,
+  versions: `pypi-axi versions <pkg> [--limit 20]
+
+List a package's release history, newest first, with upload dates and yanked status.
+
+Flags:
+  --limit <n>   Max versions shown (default 20, max 100)
+
+Examples:
+  pypi-axi versions flask
+  pypi-axi versions numpy --limit 50
+`,
+  view: `pypi-axi view <pkg> [--version X] [--full]
+
+Show package details: version, summary, author, license, required Python version,
+project URLs, release count, latest upload date, and dependency count.
+
+Flags:
+  --version <X>   Inspect a specific release instead of the latest
+  --full          Print the complete summary instead of a ~800 char preview
+
+Examples:
+  pypi-axi view requests
+  pypi-axi view django --version 4.2.0
 `,
 };

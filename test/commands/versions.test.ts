@@ -8,10 +8,28 @@ function packument() {
   return {
     info: { name: "demo", version: "1.2.0" },
     releases: {
-      "1.0.0": [{ filename: "demo-1.0.0.tar.gz", upload_time_iso_8601: "2024-01-01T00:00:00Z", yanked: false }],
-      "1.1.0": [{ filename: "demo-1.1.0.tar.gz", upload_time_iso_8601: "2024-02-01T00:00:00Z", yanked: true }],
-      "1.2.0": [{ filename: "demo-1.2.0.tar.gz", upload_time_iso_8601: "2024-03-01T00:00:00Z", yanked: false }],
       "0.0.1-empty": [], // no files uploaded -> no upload date -> excluded
+      "1.0.0": [
+        {
+          filename: "demo-1.0.0.tar.gz",
+          upload_time_iso_8601: "2024-01-01T00:00:00Z",
+          yanked: false,
+        },
+      ],
+      "1.1.0": [
+        {
+          filename: "demo-1.1.0.tar.gz",
+          upload_time_iso_8601: "2024-02-01T00:00:00Z",
+          yanked: true,
+        },
+      ],
+      "1.2.0": [
+        {
+          filename: "demo-1.2.0.tar.gz",
+          upload_time_iso_8601: "2024-03-01T00:00:00Z",
+          yanked: false,
+        },
+      ],
     },
     urls: [],
   };
@@ -23,9 +41,9 @@ describe("versionsCommand", () => {
     const out = await versionsCommand(["demo"]);
     expect(out.count).toBe("3 of 3 total");
     expect(out.versions).toEqual([
-      { version: "1.2.0", uploadDate: "2024-03-01", yanked: "no" },
-      { version: "1.1.0", uploadDate: "2024-02-01", yanked: "yes" },
-      { version: "1.0.0", uploadDate: "2024-01-01", yanked: "no" },
+      { uploadDate: "2024-03-01", version: "1.2.0", yanked: "no" },
+      { uploadDate: "2024-02-01", version: "1.1.0", yanked: "yes" },
+      { uploadDate: "2024-01-01", version: "1.0.0", yanked: "no" },
     ]);
   });
 
@@ -43,7 +61,9 @@ describe("versionsCommand", () => {
   });
 
   it("requires a package name", async () => {
-    await expect(versionsCommand([])).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
+    await expect(versionsCommand([])).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+    });
   });
 
   it("rejects an unknown flag", async () => {
