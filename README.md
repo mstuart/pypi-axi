@@ -149,6 +149,16 @@ pypi-axi setup hooks
 Installs idempotent `SessionStart` hooks for Claude Code, Codex, and OpenCode so agents see
 pypi-axi guidance at the start of each session.
 
+Verify hook setup without changing files:
+
+```sh
+pypi-axi setup hooks --check
+```
+
+To undo hook setup, remove the `pypi-axi` SessionStart entries from `~/.claude/settings.json`
+and `~/.codex/hooks.json`, remove `~/.config/opencode/plugins/axi-pypi-axi.js`, and disable
+`hooks = true` in `~/.codex/config.toml` only if no other Codex hook users need it.
+
 **Agent Skill (on-demand):**
 
 ```sh
@@ -176,10 +186,32 @@ You only need one of these — they complement each other when both are installe
 
 ```sh
 npm install
+npm run typecheck      # TypeScript no-emit check
 npm test              # vitest, fetch mocked against captured fixtures + one live check
 npm run build          # tsc -> dist
 npm run build:skill     # regenerate skills/pypi-axi/SKILL.md from the CLI's own help text
 npm run dev -- view requests   # run from source
+```
+
+## Release safety
+
+The repository version is kept in sync with the latest published npm version. `v0.1.1` is
+already published on npm, so the next workflow release should choose a bump that produces a new
+version such as `v0.1.2`.
+
+Releases are manual through `.github/workflows/release.yml`. The workflow verifies typecheck,
+build, generated skill docs, tests, and packed install smoke checks before bumping the version.
+It publishes to npm with OIDC provenance before pushing the release commit and tag, so a failed
+publish cannot leave a fresh tag that points to an unpublished npm version. If publish succeeds
+but a later git/GitHub step fails, recover by committing `package.json` and `package-lock.json`
+at the published version, creating the matching `vX.Y.Z` tag, pushing both, and creating the
+GitHub release notes from that tag.
+
+Verify npm provenance after publication:
+
+```sh
+npm view pypi-axi dist.attestations --json
+npm audit signatures --include-attestations
 ```
 
 ## License

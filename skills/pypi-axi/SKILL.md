@@ -47,7 +47,7 @@ Commands:
   deps <pkg> [--version X]            Declared dependencies (requires_dist)
   downloads <pkg>                     Recent download counts (day/week/month)
   search                              Not supported — PyPI has no public search API
-  setup hooks                         Install agent session-start hooks (ambient context)
+  setup hooks [--check]               Install or verify agent session-start hooks
 
 Run with no arguments to see the current project's declared Python dependencies
 (from requirements.txt, pyproject.toml, or setup.py) alongside their latest
