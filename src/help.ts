@@ -8,7 +8,7 @@ Commands:
   deps <pkg> [--version X]            Declared dependencies (requires_dist)
   downloads <pkg>                     Recent download counts (day/week/month)
   search                              Not supported — PyPI has no public search API
-  setup hooks                         Install agent session-start hooks (ambient context)
+  setup hooks [--check]               Install or verify agent session-start hooks
 
 Run with no arguments to see the current project's declared Python dependencies
 (from requirements.txt, pyproject.toml, or setup.py) alongside their latest
@@ -46,14 +46,15 @@ Examples:
   pypi-axi search flask       # errors — use view instead
   pypi-axi view flask         # the suggested alternative
 `,
-  setup: `pypi-axi setup hooks
+  setup: `pypi-axi setup hooks [--check]
 
 Install or repair session-start hooks so agents see pypi-axi guidance at the start
 of each session. Supports Claude Code, Codex, and OpenCode. Idempotent.
+Use --check to verify installed targets without changing files.
 
 Examples:
   pypi-axi setup hooks   # first run: installs hooks
-  pypi-axi setup hooks   # re-run anytime: no-op if already installed
+  pypi-axi setup hooks --check   # verify without writing files
 `,
   versions: `pypi-axi versions <pkg> [--limit 20]
 
