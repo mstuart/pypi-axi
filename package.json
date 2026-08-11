@@ -35,7 +35,8 @@
     "fix": "ultracite fix",
     "prepublishOnly": "npm run build",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "axi-sdk-js": "^0.1.10"
