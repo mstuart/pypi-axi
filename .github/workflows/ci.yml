@@ -17,6 +17,17 @@ jobs:
       - run: npm ci
       - name: Ultracite check
         run: npm run check
+      - run: npm run typecheck
       - run: npm run build
       - run: npm run build:skill -- --check
       - run: npm test
+      - name: Smoke packed/global and npx installs
+        run: |
+          pkg="$(npm pack --pack-destination "$RUNNER_TEMP")"
+          tarball="$RUNNER_TEMP/$pkg"
+          expected="$(node -p "require('./package.json').version")"
+
+          npm install -g "$tarball"
+          test "$(pypi-axi --version)" = "$expected"
+
+          test "$(npm exec --yes --package "$tarball" -- pypi-axi --version)" = "$expected"
