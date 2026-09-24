@@ -143,11 +143,8 @@ function parseSetupPy(text: string): DeclaredDependency[] {
 
 function extractQuotedStrings(body: string): string[] {
   const items: string[] = [];
-  QUOTED_STRING_PATTERN.lastIndex = 0;
-  let match = QUOTED_STRING_PATTERN.exec(body);
-  while (match) {
+  for (const match of body.matchAll(QUOTED_STRING_PATTERN)) {
     items.push(match[1] ?? match[2] ?? "");
-    match = QUOTED_STRING_PATTERN.exec(body);
   }
   return items.filter((item) => item.length > 0);
 }
