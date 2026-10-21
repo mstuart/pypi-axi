@@ -4,11 +4,20 @@ import { normalizeName } from "./format.js";
 import { parseRequirement } from "./pep508.js";
 
 const LINE_PATTERN = /\r?\n/;
+const REQUIREMENT_COMMENT_PATTERN = /(^|\s+)#.*$/;
+const STRING_OR_COMMENT_PATTERN =
+  /"""(?:\\[\s\S]|"(?!"")|[^"\\])*"""|'''(?:'(?!'')|[^'])*'''|"(?:\\[\s\S]|[^"\\])*"|'[^']*'|#[^\r\n]*/g;
+const NON_NEWLINE_PATTERN = /[^\r\n]/g;
+const TOML_TABLE_PATTERN = /^[ \t]*\[[^\r\n]*\][ \t]*\r?$/gm;
+const PROJECT_NAME_PATTERN = /^(?:project|"project"|'project')$/;
+const PROJECT_DEPENDENCIES_PATTERN =
+  /^\s*dependencies\s*=\s*\[((?:"[^"]*"|'[^']*'|[^\]"'])*)\]/m;
 const POETRY_DEPENDENCIES_PATTERN =
   /\[tool\.poetry\.dependencies\]([\s\S]*?)(?:\n\[|$)/;
 const POETRY_ENTRY_PATTERN = /^([A-Za-z0-9][A-Za-z0-9._-]*)\s*=\s*(.+)$/;
 const QUOTED_STRING_PATTERN = /"([^"]*)"|'([^']*)'/g;
-const SETUP_REQUIREMENTS_PATTERN = /install_requires\s*=\s*\[([\s\S]*?)\]/;
+const SETUP_REQUIREMENTS_PATTERN =
+  /install_requires\s*=\s*\[((?:"[^"]*"|'[^']*'|[^\]"'])*)\]/;
 const STRING_VALUE_PATTERN = /^"([^"]*)"|^'([^']*)'/;
 
 export interface DeclaredDependency {
@@ -70,7 +79,7 @@ function toDeclared(entry: string): DeclaredDependency {
 function parseRequirementsTxt(text: string): DeclaredDependency[] {
   const deps: DeclaredDependency[] = [];
   for (const rawLine of text.split(LINE_PATTERN)) {
-    const line = rawLine.split("#")[0].trim();
+    const line = rawLine.replace(REQUIREMENT_COMMENT_PATTERN, "").trim();
     if (!line || line.startsWith("-")) {
       continue; // skip -r/-e/--flag lines
     }
@@ -83,22 +92,48 @@ function parsePyprojectToml(text: string): DeclaredDependency[] {
   const deps: DeclaredDependency[] = [];
 
   // PEP 621: [project] dependencies = ["foo>=1.0", "bar"]
-  for (const entry of extractTomlStringArray(text, "dependencies")) {
+  const source = withoutComments(text);
+  const projectText = projectTableContents(source);
+  for (const entry of extractTomlStringArray(projectText)) {
     deps.push(toDeclared(entry));
   }
 
   // Poetry: [tool.poetry.dependencies]\nfoo = "^1.0"
-  for (const dep of extractPoetryDependencies(text)) {
+  for (const dep of extractPoetryDependencies(source)) {
     deps.push(dep);
   }
 
   return dedupe(deps);
 }
 
-function extractTomlStringArray(text: string, key: string): string[] {
-  const match = text.match(
-    new RegExp(`^\\s*${key}\\s*=\\s*\\[([\\s\\S]*?)\\]`, "m")
+function withoutComments(text: string): string {
+  return text.replace(STRING_OR_COMMENT_PATTERN, (token) =>
+    token.startsWith("#") ? token.replace(NON_NEWLINE_PATTERN, " ") : token
   );
+}
+
+function projectTableContents(text: string): string {
+  // Mask string contents while retaining offsets and newlines for table discovery.
+  const masked = text.replace(STRING_OR_COMMENT_PATTERN, (token) =>
+    token.replace(NON_NEWLINE_PATTERN, " ")
+  );
+  const tables = [...masked.matchAll(TOML_TABLE_PATTERN)];
+  for (const [index, table] of tables.entries()) {
+    const header = text
+      .slice(table.index, table.index + table[0].length)
+      .trim();
+    if (PROJECT_NAME_PATTERN.test(header.slice(1, -1).trim())) {
+      return text.slice(
+        table.index + table[0].length,
+        tables[index + 1]?.index
+      );
+    }
+  }
+  return "";
+}
+
+function extractTomlStringArray(text: string): string[] {
+  const match = text.match(PROJECT_DEPENDENCIES_PATTERN);
   if (!match) {
     return [];
   }
@@ -134,7 +169,7 @@ function extractPoetryDependencies(text: string): DeclaredDependency[] {
 }
 
 function parseSetupPy(text: string): DeclaredDependency[] {
-  const match = text.match(SETUP_REQUIREMENTS_PATTERN);
+  const match = withoutComments(text).match(SETUP_REQUIREMENTS_PATTERN);
   if (!match) {
     return [];
   }
