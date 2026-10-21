@@ -4,11 +4,17 @@ import { normalizeName } from "./format.js";
 import { parseRequirement } from "./pep508.js";
 
 const LINE_PATTERN = /\r?\n/;
+const REQUIREMENT_COMMENT_PATTERN = /(^|\s+)#.*$/;
+const PROJECT_TABLE_PATTERN =
+  /(?:^|\n)[ \t]*\[project\][^\n]*\n([\s\S]*?)(?=\n[ \t]*\[|(?![\s\S]))/;
+const PROJECT_DEPENDENCIES_PATTERN =
+  /^\s*dependencies\s*=\s*\[((?:"[^"]*"|'[^']*'|[^\]"'])*)\]/m;
 const POETRY_DEPENDENCIES_PATTERN =
   /\[tool\.poetry\.dependencies\]([\s\S]*?)(?:\n\[|$)/;
 const POETRY_ENTRY_PATTERN = /^([A-Za-z0-9][A-Za-z0-9._-]*)\s*=\s*(.+)$/;
 const QUOTED_STRING_PATTERN = /"([^"]*)"|'([^']*)'/g;
-const SETUP_REQUIREMENTS_PATTERN = /install_requires\s*=\s*\[([\s\S]*?)\]/;
+const SETUP_REQUIREMENTS_PATTERN =
+  /install_requires\s*=\s*\[((?:"[^"]*"|'[^']*'|[^\]"'])*)\]/;
 const STRING_VALUE_PATTERN = /^"([^"]*)"|^'([^']*)'/;
 
 export interface DeclaredDependency {
@@ -70,7 +76,7 @@ function toDeclared(entry: string): DeclaredDependency {
 function parseRequirementsTxt(text: string): DeclaredDependency[] {
   const deps: DeclaredDependency[] = [];
   for (const rawLine of text.split(LINE_PATTERN)) {
-    const line = rawLine.split("#")[0].trim();
+    const line = rawLine.replace(REQUIREMENT_COMMENT_PATTERN, "").trim();
     if (!line || line.startsWith("-")) {
       continue; // skip -r/-e/--flag lines
     }
@@ -83,7 +89,8 @@ function parsePyprojectToml(text: string): DeclaredDependency[] {
   const deps: DeclaredDependency[] = [];
 
   // PEP 621: [project] dependencies = ["foo>=1.0", "bar"]
-  for (const entry of extractTomlStringArray(text, "dependencies")) {
+  const projectText = text.match(PROJECT_TABLE_PATTERN)?.[1] ?? "";
+  for (const entry of extractTomlStringArray(projectText)) {
     deps.push(toDeclared(entry));
   }
 
@@ -95,10 +102,8 @@ function parsePyprojectToml(text: string): DeclaredDependency[] {
   return dedupe(deps);
 }
 
-function extractTomlStringArray(text: string, key: string): string[] {
-  const match = text.match(
-    new RegExp(`^\\s*${key}\\s*=\\s*\\[([\\s\\S]*?)\\]`, "m")
-  );
+function extractTomlStringArray(text: string): string[] {
+  const match = text.match(PROJECT_DEPENDENCIES_PATTERN);
   if (!match) {
     return [];
   }
