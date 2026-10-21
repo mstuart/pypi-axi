@@ -58,3 +58,32 @@ it("preserves requirement URL fragments while removing actual comments", () => {
     { name: "bar", spec: ">=1" },
   ]);
 });
+
+it("accepts equivalent project table spellings", () => {
+  for (const header of ["[ project ]", '["project"]', "['project']"]) {
+    expect(
+      readManifest("pyproject.toml", `${header}\ndependencies = ["requests"]`)
+    ).toEqual([{ name: "requests" }]);
+  }
+});
+it("ignores unmatched quotes in dependency array comments", () => {
+  expect(
+    readManifest(
+      "pyproject.toml",
+      '[project]\ndependencies = [\n  "requests", # project\'s HTTP client\n  "rich"\n]'
+    )
+  ).toEqual([{ name: "requests" }, { name: "rich" }]);
+  expect(
+    readManifest(
+      "setup.py",
+      "setup(install_requires=[\n  'requests', # project's HTTP client\n  'rich'\n])"
+    )
+  ).toEqual([{ name: "requests" }, { name: "rich" }]);
+});
+it("ignores fake project headers within multiline strings", () => {
+  const content =
+    '[tool.example]\ntemplate = """\n[project]\nexample = "text"\n"""\n[project]\ndependencies = ["requests"]';
+  expect(readManifest("pyproject.toml", content)).toEqual([
+    { name: "requests" },
+  ]);
+});
