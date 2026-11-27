@@ -1,5 +1,10 @@
 import { AxiError } from "axi-sdk-js";
-import { assertKnownFlags, parseFlags } from "../args.js";
+import {
+  assertKnownFlags,
+  assertSinglePackage,
+  parseFlags,
+  parseVersion,
+} from "../args.js";
 import { collapseWhitespace, isoDate, truncateWithCount } from "../format.js";
 import {
   fetchPackument,
@@ -24,7 +29,7 @@ function authorString(info: PypiInfo): string | undefined {
 }
 
 function projectUrls(info: PypiInfo): Record<string, string> | undefined {
-  const urls: Record<string, string> = {};
+  const urls: Record<string, string> = Object.create(null);
   if (info.home_page) {
     urls.homepage = info.home_page;
   }
@@ -53,6 +58,7 @@ export async function viewCommand(
 ): Promise<Record<string, unknown>> {
   const { positionals, flags } = parseFlags(args, ["full"]);
   assertKnownFlags(flags, ["full", "version"], USAGE);
+  assertSinglePackage(positionals, USAGE);
   const [pkg] = positionals;
   if (!pkg) {
     throw new AxiError("a package name is required", "VALIDATION_ERROR", [
@@ -60,7 +66,7 @@ export async function viewCommand(
     ]);
   }
 
-  const version = typeof flags.version === "string" ? flags.version : undefined;
+  const version = parseVersion(flags.version, USAGE);
   const full = flags.full === true;
 
   const packument = await fetchPackument(pkg);

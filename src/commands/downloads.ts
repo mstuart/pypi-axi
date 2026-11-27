@@ -1,5 +1,5 @@
 import { AxiError } from "axi-sdk-js";
-import { assertKnownFlags, parseFlags } from "../args.js";
+import { assertKnownFlags, assertSinglePackage, parseFlags } from "../args.js";
 import { fetchDownloadsRecent } from "../pypi.js";
 
 const USAGE = "pypi-axi downloads <pkg>";
@@ -9,6 +9,7 @@ export async function downloadsCommand(
 ): Promise<Record<string, unknown>> {
   const { positionals, flags } = parseFlags(args);
   assertKnownFlags(flags, [], USAGE);
+  assertSinglePackage(positionals, USAGE);
   const [pkg] = positionals;
   if (!pkg) {
     throw new AxiError("a package name is required", "VALIDATION_ERROR", [

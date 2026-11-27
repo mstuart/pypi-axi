@@ -16,7 +16,7 @@ export function parseFlags(
   booleans: string[] = []
 ): ParsedArgs {
   const positionals: string[] = [];
-  const flags: Record<string, string | boolean> = {};
+  const flags: Record<string, string | boolean> = Object.create(null);
 
   for (let i = 0; i < args.length; i += 1) {
     const token = args[i];
@@ -59,7 +59,7 @@ export function assertKnownFlags(
   commandUsage: string
 ): void {
   const unknown = Object.keys(flags).find((name) => !allowed.includes(name));
-  if (unknown) {
+  if (unknown !== undefined) {
     throw new AxiError(`unknown flag --${unknown}`, "VALIDATION_ERROR", [
       `valid flags: ${allowed.map((f) => `--${f}`).join(", ") || "(none)"}`,
       commandUsage,
@@ -81,4 +81,34 @@ export function parseLimit(
     return fallback;
   }
   return Math.min(parsed, max);
+}
+
+/** Reject surplus package names before requests are made. */
+export function assertSinglePackage(
+  positionals: string[],
+  usage: string
+): void {
+  if (positionals.length > 1) {
+    throw new AxiError(
+      `unexpected argument "${positionals[1]}"`,
+      "VALIDATION_ERROR",
+      [usage]
+    );
+  }
+}
+
+/** A present version flag must select a non-empty version. */
+export function parseVersion(
+  value: string | boolean | undefined,
+  usage: string
+): string | undefined {
+  if (value === undefined) {
+    return;
+  }
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new AxiError("--version requires a version", "VALIDATION_ERROR", [
+      usage,
+    ]);
+  }
+  return value;
 }
