@@ -1,5 +1,10 @@
 import { AxiError } from "axi-sdk-js";
-import { assertKnownFlags, parseFlags } from "../args.js";
+import {
+  assertKnownFlags,
+  assertSinglePackage,
+  parseFlags,
+  parseVersion,
+} from "../args.js";
 import { parseRequirement } from "../pep508.js";
 import { fetchPackument, fetchVersion } from "../pypi.js";
 
@@ -10,6 +15,7 @@ export async function depsCommand(
 ): Promise<Record<string, unknown>> {
   const { positionals, flags } = parseFlags(args);
   assertKnownFlags(flags, ["version"], USAGE);
+  assertSinglePackage(positionals, USAGE);
   const [pkg] = positionals;
   if (!pkg) {
     throw new AxiError("a package name is required", "VALIDATION_ERROR", [
@@ -17,7 +23,7 @@ export async function depsCommand(
     ]);
   }
 
-  const version = typeof flags.version === "string" ? flags.version : undefined;
+  const version = parseVersion(flags.version, USAGE);
   const doc = version
     ? await fetchVersion(pkg, version)
     : await fetchPackument(pkg);

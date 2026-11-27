@@ -71,6 +71,9 @@ async function getJson(url: string): Promise<unknown> {
     ]);
   }
   if (!response.ok) {
+    await response.body?.cancel().catch(() => {
+      // Preserve HTTP classification if response cleanup fails.
+    });
     // Signal 404 distinctly so callers can translate it into a NOT_FOUND.
     const error = new Error(`HTTP ${response.status}`) as Error & {
       status?: number;
